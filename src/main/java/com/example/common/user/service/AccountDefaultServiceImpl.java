@@ -3,6 +3,7 @@ package com.example.common.user.service;
 import com.example.common.domain.account.Account;
 import com.example.common.dto.Response;
 import com.example.common.dto.account.request.AccountJoinRequest;
+import com.example.common.dto.account.response.AccountResponse;
 import com.example.common.dto.error.ErrorCode;
 import com.example.common.exception.account.UsernameDuplicateException;
 import com.example.common.user.repository.AccountRepository;
@@ -33,7 +34,7 @@ public class AccountDefaultServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Response<Account> saveUser(AccountJoinRequest joinRequest) {
+    public Response<AccountResponse> saveUser(AccountJoinRequest joinRequest) {
         Account findByUsername = findByUsername(joinRequest.getUsername());
 
         if(!Objects.isNull(findByUsername)){
@@ -43,6 +44,8 @@ public class AccountDefaultServiceImpl implements AccountService {
         Account account = joinRequest.toEntity();
         accountRepository.save(account);
 
-        return Response.success(account);
+        AccountResponse response = AccountResponse.toResponseDTO(account);
+
+        return Response.success(response);
     }
 }
