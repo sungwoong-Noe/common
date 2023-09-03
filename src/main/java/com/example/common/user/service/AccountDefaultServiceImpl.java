@@ -35,11 +35,14 @@ public class AccountDefaultServiceImpl implements AccountService {
     @Transactional
     public Response<Account> saveUser(AccountJoinRequest joinRequest) {
         Account findByUsername = findByUsername(joinRequest.getUsername());
+
         if(!Objects.isNull(findByUsername)){
             throw new UsernameDuplicateException(ErrorCode.DUPLICATED_USERNAME, String.format("Username: ", joinRequest.getUsername()));
         }
+
         Account account = joinRequest.toEntity();
         accountRepository.save(account);
+
         return Response.success(account);
     }
 }

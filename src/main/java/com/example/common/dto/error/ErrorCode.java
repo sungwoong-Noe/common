@@ -10,7 +10,7 @@ public enum ErrorCode {
 
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "Username is duplicated.");
 
-
     private HttpStatus status;
+
     private String message;
 }

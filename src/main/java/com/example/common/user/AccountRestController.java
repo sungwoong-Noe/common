@@ -21,8 +21,7 @@ public class AccountRestController {
 
         Response<Account> accountResponse = accountService.saveUser(request);
 
-        return ResponseEntity.ok().body(accountResponse.getResult());
+        return ResponseEntity.ok().body(accountResponse);
     }
-
 
 }
