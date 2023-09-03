@@ -14,7 +14,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service("userService")
+@Service("accountService")
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AccountDefaultServiceImpl implements AccountService {
