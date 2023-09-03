@@ -1,0 +1,33 @@
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+
+spring:
+#  security:
+#    user:
+#      name: user
+#      password: 1234
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ENC(zcQuA2REK4ORLOkmVjOPNvN1HNytav+DwWrVZLuNrPEapWe1eF8u2qmtbFMR8m3yd9190Xii5BuQ7D65j2QAefwAjjIBpeQl28/vFpoxvrI=)
+    username: ENC(ENDcypXbUjMDXuBaltQkE7o1+l8MmGFjqhCBN2Ycm6oT+IAr7dzO7VWwUpCwoyZ9)
+    password: ENC(CQdUnfyShmMOVmLg/U7QIRg+gfj/HiqxT4J6rQofWeWXYrIK1GZCGPSK1VzogE16)
+    hikari:
+      maximum-pool-size: 4
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+
+logging:
+  level:
+    #hibernate? ??? ?? ??? debug??? ??
+    #jpa hibernate? ???? sql? ??? ??? ???? ?? ??
+    org.hibernate.sql: debug
+    org.hibernate.type: trace  #?? ???? ????? ???? ??
+
+
