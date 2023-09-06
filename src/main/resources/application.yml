@@ -3,10 +3,13 @@ jasypt:
     bean: jasyptEncryptorAES
 
 spring:
-#  security:
-#    user:
-#      name: user
-#      password: 1234
+  session:
+    jdbc:
+      initialize-schema: always
+  security:
+    user:
+      name: user
+      password: 1234
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ENC(zcQuA2REK4ORLOkmVjOPNvN1HNytav+DwWrVZLuNrPEapWe1eF8u2qmtbFMR8m3yd9190Xii5BuQ7D65j2QAefwAjjIBpeQl28/vFpoxvrI=)
@@ -21,6 +24,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    show-sql: true
+
+
+  thymeleaf:
+    suffix: .html
+    prefix: classpath:/template/
 
 
 logging:

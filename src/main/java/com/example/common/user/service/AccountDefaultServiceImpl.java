@@ -25,8 +25,6 @@ public class AccountDefaultServiceImpl implements AccountService {
     @Override
     public Account findByUsername(String username){
 
-
-
         Account account = accountRepository.findByUsername(username).orElse(null);
 
         return account;
@@ -35,9 +33,11 @@ public class AccountDefaultServiceImpl implements AccountService {
     @Override
     @Transactional
     public Response<AccountResponse> saveUser(AccountJoinRequest joinRequest) {
-        Account findByUsername = findByUsername(joinRequest.getUsername());
 
-        if(!Objects.isNull(findByUsername)){
+        Optional<Account> byUsername = accountRepository.findByUsername(joinRequest.getUsername());
+
+
+        if(byUsername.isPresent()){
             throw new UsernameDuplicateException(ErrorCode.DUPLICATED_USERNAME, String.format("Username: ", joinRequest.getUsername()));
         }
 

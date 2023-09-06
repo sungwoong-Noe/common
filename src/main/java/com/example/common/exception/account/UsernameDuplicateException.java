@@ -7,11 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UsernameDuplicateException extends RuntimeException {
-
     private ErrorCode errorCode;
     private String message;
-
-
 
     @Override
     public String toString() {

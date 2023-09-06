@@ -13,10 +13,8 @@ public class Response<T> {
     private T result;
 
     public static Response<Void> error(String resultMessage) {
-
         return new Response(HttpStatus.CONFLICT.value() ,resultMessage, null);
     }
-
     public static <T> Response<T> success(T result) {
         return new Response(HttpStatus.OK.value() ,"Success", result);
     }
