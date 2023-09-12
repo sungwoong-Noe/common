@@ -12,8 +12,6 @@ import java.util.List;
 public class UserPrincipal extends User  {
 
     private final Long accountId;
-
-
     public UserPrincipal(String username, String password, Long accountId) {
         super(username, password, List.of(new SimpleGrantedAuthority("ADMIN")));
         this.accountId = accountId;

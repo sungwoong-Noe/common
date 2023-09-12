@@ -8,18 +8,16 @@ import com.example.common.dto.error.ErrorCode;
 import com.example.common.exception.account.UsernameDuplicateException;
 import com.example.common.user.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service("accountService")
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AccountDefaultServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
 
     @Override
