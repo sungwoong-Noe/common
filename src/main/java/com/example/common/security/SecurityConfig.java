@@ -67,8 +67,8 @@ public class SecurityConfig {
                         .failureHandler(new LoginFailHandler(objectMapper))
                 )
                 .exceptionHandling(e -> {
-                    e.accessDeniedHandler(new Http403Handler());
-                    e.authenticationEntryPoint(new Http401Handler());
+                    e.accessDeniedHandler(new Http403Handler(objectMapper));
+                    e.authenticationEntryPoint(new Http401Handler(objectMapper));
                 })
                 .userDetailsService(userDetailsService)
                 .rememberMe(rm -> rm.rememberMeParameter("remember")
