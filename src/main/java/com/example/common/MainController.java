@@ -20,4 +20,17 @@ public class MainController {
     public ResponseEntity<?> login() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 페이지입니다.");
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> user() {
+        return ResponseEntity.ok().body("사용자 페이지입니다.");
+    }
+
+
+    @GetMapping("/admin")
+    public ResponseEntity<?> adminPage() {
+        return ResponseEntity.ok().body("관리자 페이지입니다.");
+    }
+
+
 }

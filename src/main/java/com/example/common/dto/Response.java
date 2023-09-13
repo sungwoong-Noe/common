@@ -12,8 +12,8 @@ public class Response<T> {
     private String resultMessage;
     private T result;
 
-    public static Response<Void> error(String resultMessage) {
-        return new Response(HttpStatus.CONFLICT.value() ,resultMessage, null);
+    public static Response<Void> error(HttpStatus httpStatus, String resultMessage) {
+        return new Response(httpStatus.value() ,resultMessage, null);
     }
     public static <T> Response<T> success(T result) {
         return new Response(HttpStatus.OK.value() ,"Success", result);

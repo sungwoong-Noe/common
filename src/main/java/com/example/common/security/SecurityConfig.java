@@ -1,6 +1,10 @@
 package com.example.common.security;
 
+import com.example.common.security.handler.Http401Handler;
+import com.example.common.security.handler.Http403Handler;
+import com.example.common.security.handler.LoginFailHandler;
 import com.example.common.security.service.CustomUserDetailsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +23,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.beans.BeanProperty;
@@ -29,6 +34,7 @@ import java.beans.BeanProperty;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -46,8 +52,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/join", "/error", "/", "/login").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/join", "/error", "/", "/login").permitAll()
+                                .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/user").hasRole("USER")
+//                        .access(new WebExpressionAuthorizationManager("hasRole('ADMIN') AND hasAuthority('WRITE')"))
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -55,7 +64,12 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/")
+                        .failureHandler(new LoginFailHandler(objectMapper))
                 )
+                .exceptionHandling(e -> {
+                    e.accessDeniedHandler(new Http403Handler());
+                    e.authenticationEntryPoint(new Http401Handler());
+                })
                 .userDetailsService(userDetailsService)
                 .rememberMe(rm -> rm.rememberMeParameter("remember")
                         .rememberMeCookieName("remember-me")

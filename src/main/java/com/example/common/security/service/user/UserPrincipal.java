@@ -12,9 +12,17 @@ import java.util.List;
 public class UserPrincipal extends User  {
 
     private final Long accountId;
-    public UserPrincipal(String username, String password, Long accountId) {
-        super(username, password, List.of(new SimpleGrantedAuthority("ADMIN")));
-        this.accountId = accountId;
 
+
+    //role : 역할 -> 관리자, 사용자, 매니저
+    //authority: 권한 -> 글 쓰기, 글 읽기, 사용자 정지시키기
+
+    public UserPrincipal(String username, String password, Long accountId) {
+        super(username, password,
+                List.of(
+                        new SimpleGrantedAuthority("ROLE_USER")
+//                        ,new SimpleGrantedAuthority("WRITE")
+                ));
+        this.accountId = accountId;
     }
 }
