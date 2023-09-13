@@ -22,8 +22,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.beans.BeanProperty;
@@ -35,6 +38,10 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
+
+    private final AccessDeniedHandler http403Handler;
+    private final AuthenticationEntryPoint http401Handler;
+    private final AuthenticationFailureHandler loginFailHandler;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -64,11 +71,11 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/")
-                        .failureHandler(new LoginFailHandler(objectMapper))
+                        .failureHandler(loginFailHandler)
                 )
                 .exceptionHandling(e -> {
-                    e.accessDeniedHandler(new Http403Handler(objectMapper));
-                    e.authenticationEntryPoint(new Http401Handler(objectMapper));
+                    e.accessDeniedHandler(http403Handler);
+                    e.authenticationEntryPoint(http401Handler);
                 })
                 .userDetailsService(userDetailsService)
                 .rememberMe(rm -> rm.rememberMeParameter("remember")
