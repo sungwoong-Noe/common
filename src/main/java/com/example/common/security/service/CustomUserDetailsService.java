@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component(value="userDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final AccountRepository accountRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
