@@ -1,47 +1,36 @@
 package com.example.common.security;
 
 import com.example.common.security.filter.CustomUsernamePasswordAuthFilter;
-import com.example.common.security.handler.Http401Handler;
-import com.example.common.security.handler.Http403Handler;
 import com.example.common.security.handler.LoginFailHandler;
+import com.example.common.security.handler.LoginSuccessHandler;
 import com.example.common.security.service.CustomUserDetailsService;
-import com.example.common.user.repository.AccountRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
-import java.beans.BeanProperty;
-
 @Configuration
 @EnableWebSecurity(debug = false)
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -68,10 +57,11 @@ public class SecurityConfig {
 
         return http.authorizeHttpRequests(request -> request
                                 .requestMatchers("/join", "/error", "/", "/login").permitAll()
-                                .requestMatchers("/admin").hasRole("ADMIN")
-                                .requestMatchers("/user").hasRole("USER")
+//                                .requestMatchers("/admin").hasRole("ADMIN")
+//                                .requestMatchers("/user").hasRole("USER")
 //                        .access(new WebExpressionAuthorizationManager("hasRole('ADMIN') AND hasAuthority('WRITE')"))
                                 .anyRequest().authenticated()
+
                 )
                 .addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 //                .formLogin(form -> form
@@ -81,12 +71,13 @@ public class SecurityConfig {
 //                        .passwordParameter("password")
 //                        .defaultSuccessUrl("/")
 //                        .failureHandler(loginFailHandler)
+//                            .successHandler(new LoginSuccessHandler(objectMapper))
 //                )
                 .exceptionHandling(e -> {
                     e.accessDeniedHandler(http403Handler);
                     e.authenticationEntryPoint(http401Handler);
                 })
-                .userDetailsService(userDetailsService)
+//                .userDetailsService(userDetailsService)
                 .rememberMe(rm -> rm.rememberMeParameter("remember")
                         .rememberMeCookieName("remember-me")
                         .alwaysRemember(false)
@@ -104,10 +95,10 @@ public class SecurityConfig {
     public CustomUsernamePasswordAuthFilter usernamePasswordAuthenticationFilter() {
         CustomUsernamePasswordAuthFilter filter = new CustomUsernamePasswordAuthFilter("/login", objectMapper);
         filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+//        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
         filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
-
 
         SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
         rememberMeServices.setAlwaysRemember(true);

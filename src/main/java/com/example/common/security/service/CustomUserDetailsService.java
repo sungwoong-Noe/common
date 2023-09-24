@@ -23,8 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         UserDetails userPrincipal = new UserPrincipal(account.getUsername(), account.getPassword(), account.getId());
 
-        log.info("{}님 Login Success", account.getUsername());
-
+//        log.info("{}님 Login Success", account.getUsername());
         return userPrincipal;
     }
 }
